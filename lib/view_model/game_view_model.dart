@@ -65,7 +65,7 @@ class GameViewModel extends Notifier<GameState> {
   }
 
   void applyMove(int row, int col) {
-    if (_logic.applyMove(row, col, _logic.currentPlayer)) {
+    if (_logic.applyMove(row, col, state.currentPlayer)) {
       int winner = _logic.getWinner();
       state = GameState(
         board: _logic.board,

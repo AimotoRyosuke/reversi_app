@@ -33,12 +33,13 @@ class WinnerDialog extends StatelessWidget {
             children: [
               Text(
                 '$winnerName: $winnerScore',
-                style: const TextStyle(fontSize: 16),
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
               ),
               const SizedBox(width: 16),
               Text(
                 '$loserName: $loserScore',
-                style: const TextStyle(fontSize: 16),
+                style: const TextStyle(fontSize: 20),
               ),
             ],
           )
