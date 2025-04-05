@@ -4,11 +4,10 @@ import 'package:reversi_app/ui/game_board.dart';
 import 'package:reversi_app/ui/score.dart';
 import 'package:reversi_app/ui/skip_message.dart';
 import 'package:reversi_app/ui/winner_dialog.dart';
-import 'package:reversi_app/ui/wood_background.dart';
 import 'package:reversi_app/view_model/game_view_model.dart';
 
-class LocalGameScreen extends ConsumerWidget {
-  const LocalGameScreen({super.key});
+class LocalMultiplayerScreen extends ConsumerWidget {
+  const LocalMultiplayerScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -36,25 +35,15 @@ class LocalGameScreen extends ConsumerWidget {
     );
 
     return Scaffold(
+      backgroundColor: const Color(0xFFFCF6E5),
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFFCF6E5),
         elevation: 0,
-        leadingWidth: 130,
-        leading: Row(
-          children: [
-            const SizedBox(width: 8),
-            TextButton(
-              onPressed: gameViewModel.resetGame,
-              style: TextButton.styleFrom(
-                padding: EdgeInsets.zero,
-              ),
-              child: const Text(
-                'リセット',
-                style: TextStyle(color: Colors.black, fontSize: 16),
-                softWrap: false,
-              ),
-            ),
-          ],
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
         title: const Text(
           'オセロ',
@@ -63,6 +52,17 @@ class LocalGameScreen extends ConsumerWidget {
         centerTitle: true,
         titleSpacing: 0,
         actions: [
+          TextButton(
+            onPressed: gameViewModel.resetGame,
+            style: TextButton.styleFrom(
+              padding: EdgeInsets.zero,
+            ),
+            child: const Text(
+              'リセット',
+              style: TextStyle(color: Colors.black, fontSize: 16),
+              softWrap: false,
+            ),
+          ),
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.black),
             onPressed: () {
@@ -71,12 +71,7 @@ class LocalGameScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: CustomPaint(
-        painter: WoodBackgroundPainter(),
-        child: const SafeArea(
-          child: _GameContent(),
-        ),
-      ),
+      body: const _GameContent(),
     );
   }
 }
@@ -96,7 +91,7 @@ class _GameContent extends ConsumerWidget {
           blackScore: gameState.blackScore,
           whiteScore: gameState.whiteScore,
         ),
-        const Spacer(),
+        const Spacer(flex: 1),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -132,7 +127,7 @@ class _GameContent extends ConsumerWidget {
               ),
           ],
         ),
-        const Spacer(),
+        const Spacer(flex: 2),
       ],
     );
   }
