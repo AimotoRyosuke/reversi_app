@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 
 class ScoreDisplay extends StatelessWidget {
+  const ScoreDisplay({super.key, this.blackScore = 0, this.whiteScore = 0});
   final int blackScore;
   final int whiteScore;
-
-  const ScoreDisplay({super.key, this.blackScore = 0, this.whiteScore = 0});
 
   @override
   Widget build(BuildContext context) {

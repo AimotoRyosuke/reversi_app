@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
 class SkipMessage extends HookWidget {
-  const SkipMessage({super.key, required this.onEnd});
+  const SkipMessage({required this.onEnd, super.key});
   final VoidCallback onEnd;
 
   @override

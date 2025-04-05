@@ -1,6 +1,6 @@
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../game/reversi_logic.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:reversi_app/game/reversi_logic.dart';
 
 part 'game_view_model.freezed.dart';
 
@@ -19,13 +19,16 @@ class GameState with _$GameState {
 
   const GameState._();
 
+  /// getter for black score
   int get blackScore => _calculateScore(board, 1);
+
+  /// getter for white score
   int get whiteScore => _calculateScore(board, -1);
 
   int _calculateScore(List<List<int>> board, int player) {
-    int score = 0;
-    for (var row in board) {
-      for (var cell in row) {
+    var score = 0;
+    for (final row in board) {
+      for (final cell in row) {
         if (cell == player) score++;
       }
     }
@@ -33,6 +36,7 @@ class GameState with _$GameState {
   }
 }
 
+/// ViewModel for the game logic
 class GameViewModel extends Notifier<GameState> {
   late ReversiLogic _logic;
 
@@ -56,6 +60,7 @@ class GameViewModel extends Notifier<GameState> {
     );
   }
 
+  /// Hide the skip message
   void hideSkipMessage() {
     state = state.copyWith(showSkipMessage: false);
   }
@@ -72,7 +77,7 @@ class GameViewModel extends Notifier<GameState> {
 
   void applyMove(int row, int col) {
     if (_logic.applyMove(row, col, state.currentPlayer)) {
-      int winner = _logic.getWinner();
+      final winner = _logic.getWinner();
       state = GameState(
         board: _logic.board,
         currentPlayer: _logic.currentPlayer,

@@ -1,16 +1,16 @@
+/// Represents the logic for the Reversi game.
 class ReversiLogic {
-  static const int boardSize = 8;
-  late List<List<int>> board;
-  late int currentPlayer; // 1 for black, -1 for white
-
   ReversiLogic() {
     board = List.generate(boardSize, (i) => List.filled(boardSize, 0));
     currentPlayer = 1; // Black starts
     initializeBoard();
   }
+  static const int boardSize = 8;
+  late List<List<int>> board;
+  late int currentPlayer;
 
   void initializeBoard() {
-    int mid = boardSize ~/ 2;
+    const mid = boardSize ~/ 2;
     board[mid - 1][mid - 1] = -1;
     board[mid][mid] = -1;
     board[mid - 1][mid] = 1;
@@ -19,7 +19,7 @@ class ReversiLogic {
 
   bool isValidMove(int row, int col, int player) {
     if (board[row][col] != 0) return false;
-    List<List<int>> directions = [
+    final directions = <List<int>>[
       [-1, -1],
       [-1, 0],
       [-1, 1],
@@ -27,11 +27,12 @@ class ReversiLogic {
       [0, 1],
       [1, -1],
       [1, 0],
-      [1, 1]
+      [1, 1],
     ];
-    for (var d in directions) {
-      int r = row + d[0], c = col + d[1];
-      bool hasOpponent = false;
+    for (final d in directions) {
+      var r = row + d[0];
+      var c = col + d[1];
+      var hasOpponent = false;
       while (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
         if (board[r][c] == -player) {
           hasOpponent = true;
@@ -49,9 +50,9 @@ class ReversiLogic {
   }
 
   List<List<int>> getValidMoves(int player) {
-    List<List<int>> moves = [];
-    for (int i = 0; i < boardSize; i++) {
-      for (int j = 0; j < boardSize; j++) {
+    final moves = <List<int>>[];
+    for (var i = 0; i < boardSize; i++) {
+      for (var j = 0; j < boardSize; j++) {
         if (isValidMove(i, j, player)) {
           moves.add([i, j]);
         }
@@ -71,7 +72,7 @@ class ReversiLogic {
   }
 
   void flipStones(int row, int col, int player) {
-    List<List<int>> directions = [
+    final directions = <List<int>>[
       [-1, -1],
       [-1, 0],
       [-1, 1],
@@ -79,16 +80,17 @@ class ReversiLogic {
       [0, 1],
       [1, -1],
       [1, 0],
-      [1, 1]
+      [1, 1],
     ];
-    for (var d in directions) {
-      List<List<int>> potentialFlips = [];
-      int r = row + d[0], c = col + d[1];
+    for (final d in directions) {
+      final potentialFlips = <List<int>>[];
+      var r = row + d[0];
+      var c = col + d[1];
       while (r >= 0 && r < boardSize && c >= 0 && c < boardSize) {
         if (board[r][c] == -player) {
           potentialFlips.add([r, c]);
         } else if (board[r][c] == player) {
-          for (var pos in potentialFlips) {
+          for (final pos in potentialFlips) {
             board[pos[0]][pos[1]] = player;
           }
           break;
@@ -106,11 +108,11 @@ class ReversiLogic {
   /// それ以外ですべての駒が置かれていない場合は0を返します。
   /// 全ての駒が置かれている場合は、黒の駒が多い場合は1を返し、白の駒が多い場合は-1を返します。
   int getWinner() {
-    int blackCount = 0;
-    int whiteCount = 0;
+    var blackCount = 0;
+    var whiteCount = 0;
 
-    for (var row in board) {
-      for (var cell in row) {
+    for (final row in board) {
+      for (final cell in row) {
         if (cell == 1) blackCount++;
         if (cell == -1) whiteCount++;
       }

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter/services.dart';
-import 'ui/game_screen.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:reversi_app/ui/game_screen.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const GameScreen(),
+      home: const LocalGameScreen(),
     );
   }
 }

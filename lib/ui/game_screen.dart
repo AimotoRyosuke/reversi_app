@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import '../view_model/game_view_model.dart';
-import 'skip_message.dart';
-import 'winner_dialog.dart';
-import 'game_board.dart';
-import 'score.dart';
-import 'wood_background.dart';
+import 'package:reversi_app/ui/game_board.dart';
+import 'package:reversi_app/ui/score.dart';
+import 'package:reversi_app/ui/skip_message.dart';
+import 'package:reversi_app/ui/winner_dialog.dart';
+import 'package:reversi_app/ui/wood_background.dart';
+import 'package:reversi_app/view_model/game_view_model.dart';
 
-class GameScreen extends ConsumerWidget {
-  const GameScreen({super.key});
+class LocalGameScreen extends ConsumerWidget {
+  const LocalGameScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -18,7 +18,7 @@ class GameScreen extends ConsumerWidget {
       gameProvider.select((state) => state.winner),
       (_, winner) {
         if (winner != 0) {
-          showDialog(
+          showDialog<void>(
             context: context,
             builder: (context) => WinnerDialog(
               winnerName: winner == 1 ? '黒' : '白',
@@ -36,7 +36,6 @@ class GameScreen extends ConsumerWidget {
     );
 
     return Scaffold(
-      extendBodyBehindAppBar: false,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
@@ -45,9 +44,7 @@ class GameScreen extends ConsumerWidget {
           children: [
             const SizedBox(width: 8),
             TextButton(
-              onPressed: () {
-                gameViewModel.resetGame();
-              },
+              onPressed: gameViewModel.resetGame,
               style: TextButton.styleFrom(
                 padding: EdgeInsets.zero,
               ),
@@ -76,7 +73,7 @@ class GameScreen extends ConsumerWidget {
       ),
       body: CustomPaint(
         painter: WoodBackgroundPainter(),
-        child: SafeArea(
+        child: const SafeArea(
           child: _GameContent(),
         ),
       ),
@@ -127,13 +124,11 @@ class _GameContent extends ConsumerWidget {
               board: gameState.board,
               validMoves: gameState.validMoves,
               player: gameState.currentPlayer,
-              onCellTap: (row, col) {
-                gameViewModel.applyMove(row, col);
-              },
+              onCellTap: gameViewModel.applyMove,
             ),
             if (gameState.showSkipMessage)
               SkipMessage(
-                onEnd: () => gameViewModel.hideSkipMessage(),
+                onEnd: gameViewModel.hideSkipMessage,
               ),
           ],
         ),

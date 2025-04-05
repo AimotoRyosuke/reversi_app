@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 
 class GameBoardWidget extends StatelessWidget {
-  final List<List<int>> board;
-  final List<List<int>> validMoves;
-  final void Function(int, int) onCellTap;
-  final int player;
-
   const GameBoardWidget({
-    super.key,
     required this.board,
     required this.validMoves,
     required this.onCellTap,
     required this.player,
+    super.key,
   });
+  final List<List<int>> board;
+  final List<List<int>> validMoves;
+  final void Function(int, int) onCellTap;
+  final int player;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +24,9 @@ class GameBoardWidget extends StatelessWidget {
         ),
         itemCount: 64,
         itemBuilder: (context, index) {
-          final int row = index ~/ 8;
-          final int col = index % 8;
-          final int cell = board[row][col];
+          final row = index ~/ 8;
+          final col = index % 8;
+          final cell = board[row][col];
           Widget piece = const SizedBox.shrink();
           if (cell == 1) {
             piece = Container(
@@ -49,13 +48,13 @@ class GameBoardWidget extends StatelessWidget {
             );
           }
           // 空セルで有効な着手位置なら赤いマーカーを表示
-          bool isValid =
+          final isValid =
               validMoves.any((move) => move[0] == row && move[1] == col);
           return GestureDetector(
             onTap: () => onCellTap(row, col),
             child: Container(
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.black),
+                border: Border.all(),
                 color: Colors.green,
               ),
               child: Center(

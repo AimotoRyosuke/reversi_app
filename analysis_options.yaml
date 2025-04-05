@@ -1,6 +1,9 @@
-include: package:lints/recommended.yaml
+include: package:very_good_analysis/analysis_options.yaml
 
 analyzer:
   exclude:
     - build/**
     - lib/generated/**
+  errors:
+    public_member_api_docs: false
+
