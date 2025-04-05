@@ -4,13 +4,15 @@ class GameBoardWidget extends StatelessWidget {
   final List<List<int>> board;
   final List<List<int>> validMoves;
   final void Function(int, int) onCellTap;
+  final int player;
 
   const GameBoardWidget({
-    Key? key,
+    super.key,
     required this.board,
     required this.validMoves,
     required this.onCellTap,
-  }) : super(key: key);
+    required this.player,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +69,9 @@ class GameBoardWidget extends StatelessWidget {
                         height: 15,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.red.withOpacity(0.5),
+                          color: player == 1
+                              ? Colors.black.withValues(alpha: 0.5)
+                              : Colors.white.withValues(alpha: 0.5),
                         ),
                       ),
                   ],

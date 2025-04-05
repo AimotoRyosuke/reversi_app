@@ -101,15 +101,29 @@ class ReversiLogic {
     }
   }
 
+  /// ゲームの勝者を判定します。
+  /// 黒の駒が0の場合は-1を返し、白の駒が0の場合は1を返します。
+  /// それ以外ですべての駒が置かれていない場合は0を返します。
+  /// 全ての駒が置かれている場合は、黒の駒が多い場合は1を返し、白の駒が多い場合は-1を返します。
   int getWinner() {
-    int count = 0;
+    int blackCount = 0;
+    int whiteCount = 0;
+
     for (var row in board) {
       for (var cell in row) {
-        count += cell;
+        if (cell == 1) blackCount++;
+        if (cell == -1) whiteCount++;
       }
     }
-    if (count > 0) return 1;
-    if (count < 0) return -1;
-    return 0;
+
+    if (blackCount == 0) return -1; // White wins
+    if (whiteCount == 0) return 1; // Black wins
+    final canContinue = getValidMoves(currentPlayer).isNotEmpty ||
+        getValidMoves(-currentPlayer).isNotEmpty;
+    if (blackCount + whiteCount == boardSize * boardSize || !canContinue) {
+      return blackCount > whiteCount ? 1 : -1; // Compare counts
+    }
+
+    return 0; // Game is still ongoing
   }
 }

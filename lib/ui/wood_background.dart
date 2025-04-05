@@ -16,7 +16,7 @@ class WoodBackgroundPainter extends CustomPainter {
 
     // 縦方向の木目模様を描画
     final Paint linePaint = Paint()
-      ..color = Colors.black.withOpacity(0.15)
+      ..color = Colors.black.withValues(alpha: 0.15)
       ..strokeWidth = 1.5
       ..style = PaintingStyle.stroke;
 

@@ -4,8 +4,7 @@ class ScoreDisplay extends StatelessWidget {
   final int blackScore;
   final int whiteScore;
 
-  const ScoreDisplay({Key? key, this.blackScore = 0, this.whiteScore = 0})
-      : super(key: key);
+  const ScoreDisplay({super.key, this.blackScore = 0, this.whiteScore = 0});
 
   @override
   Widget build(BuildContext context) {

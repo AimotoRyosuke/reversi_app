@@ -20,8 +20,7 @@
 
 - Flutter: 最新版
 - Dart: 最新版
-- flutter_riverpod: 状態管理
-- Flame: ゲームエンジン（一部機能で使用）
+- hooks_riverpod: 状態管理
 
 ## インストール手順
 
@@ -35,7 +34,7 @@
 
 ```bash
 # リポジトリをクローン
-git clone https://github.com/yourusername/reversi_app.git
+git clone git@github.com:AimotoRyosuke/reversi_app.git
 
 # プロジェクトディレクトリに移動
 cd reversi_app
@@ -73,10 +72,9 @@ flutter run
 │   ├── game_board.dart      # ゲームボードUI
 │   ├── score.dart           # スコア表示コンポーネント
 │   ├── wood_background.dart # 木目調背景の描画
-│   └── controls.dart        # ゲームコントロールUI
+│   └── game_screen.dart      # ゲーム画面UI
 └── game/
     ├── reversi_logic.dart   # ゲームのコアロジック
-    ├── reversi_game.dart    # Flameゲームエンジン実装
     └── ai.dart              # AI対戦相手のロジック
 
 ## 開発ガイド

@@ -1,39 +1,56 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../game/reversi_logic.dart';
 
+part 'game_view_model.freezed.dart';
+
 final gameProvider =
-    StateNotifierProvider<GameViewModel, GameState>((ref) => GameViewModel());
+    NotifierProvider<GameViewModel, GameState>(GameViewModel.new);
 
-class GameState {
-  final List<List<int>> board;
-  final int currentPlayer;
-  final int winner;
-  final List<List<int>> validMoves;
+@freezed
+class GameState with _$GameState {
+  const factory GameState({
+    required List<List<int>> board,
+    required int currentPlayer,
+    required int winner,
+    required List<List<int>> validMoves,
+  }) = _GameState;
 
-  GameState({
-    required this.board,
-    required this.currentPlayer,
-    required this.winner,
-    required this.validMoves,
-  });
+  const GameState._();
+
+  int get blackScore => _calculateScore(board, 1);
+  int get whiteScore => _calculateScore(board, -1);
+
+  int _calculateScore(List<List<int>> board, int player) {
+    int score = 0;
+    for (var row in board) {
+      for (var cell in row) {
+        if (cell == player) score++;
+      }
+    }
+    return score;
+  }
 }
 
-class GameViewModel extends StateNotifier<GameState> {
+class GameViewModel extends Notifier<GameState> {
   late ReversiLogic _logic;
 
-  GameViewModel()
-      : super(GameState(
-          board: List.generate(8, (index) => List.filled(8, 0)),
-          currentPlayer: 1,
-          winner: 0,
-          validMoves: [],
-        )) {
+  @override
+  GameState build() {
     _logic = ReversiLogic();
-    state = GameState(
+    return GameState(
       board: _logic.board,
       currentPlayer: _logic.currentPlayer,
       winner: 0,
       validMoves: _logic.getValidMoves(_logic.currentPlayer),
+    );
+  }
+
+  void skipTurn() {
+    final nextPlayer = _logic.currentPlayer == 1 ? -1 : 1;
+    state = state.copyWith(
+      currentPlayer: nextPlayer,
+      validMoves: _logic.getValidMoves(nextPlayer),
     );
   }
 
@@ -56,6 +73,10 @@ class GameViewModel extends StateNotifier<GameState> {
         winner: winner,
         validMoves: _logic.getValidMoves(_logic.currentPlayer),
       );
+    }
+    if (state.winner != 0) return;
+    if (state.validMoves.isEmpty) {
+      skipTurn();
     }
   }
 }
