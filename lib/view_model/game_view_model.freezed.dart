@@ -20,6 +20,7 @@ mixin _$GameState {
   int get currentPlayer => throw _privateConstructorUsedError;
   int get winner => throw _privateConstructorUsedError;
   List<List<int>> get validMoves => throw _privateConstructorUsedError;
+  bool get showSkipMessage => throw _privateConstructorUsedError;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -37,7 +38,8 @@ abstract class $GameStateCopyWith<$Res> {
       {List<List<int>> board,
       int currentPlayer,
       int winner,
-      List<List<int>> validMoves});
+      List<List<int>> validMoves,
+      bool showSkipMessage});
 }
 
 /// @nodoc
@@ -59,6 +61,7 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
     Object? currentPlayer = null,
     Object? winner = null,
     Object? validMoves = null,
+    Object? showSkipMessage = null,
   }) {
     return _then(_value.copyWith(
       board: null == board
@@ -77,6 +80,10 @@ class _$GameStateCopyWithImpl<$Res, $Val extends GameState>
           ? _value.validMoves
           : validMoves // ignore: cast_nullable_to_non_nullable
               as List<List<int>>,
+      showSkipMessage: null == showSkipMessage
+          ? _value.showSkipMessage
+          : showSkipMessage // ignore: cast_nullable_to_non_nullable
+              as bool,
     ) as $Val);
   }
 }
@@ -93,7 +100,8 @@ abstract class _$$GameStateImplCopyWith<$Res>
       {List<List<int>> board,
       int currentPlayer,
       int winner,
-      List<List<int>> validMoves});
+      List<List<int>> validMoves,
+      bool showSkipMessage});
 }
 
 /// @nodoc
@@ -113,6 +121,7 @@ class __$$GameStateImplCopyWithImpl<$Res>
     Object? currentPlayer = null,
     Object? winner = null,
     Object? validMoves = null,
+    Object? showSkipMessage = null,
   }) {
     return _then(_$GameStateImpl(
       board: null == board
@@ -131,6 +140,10 @@ class __$$GameStateImplCopyWithImpl<$Res>
           ? _value._validMoves
           : validMoves // ignore: cast_nullable_to_non_nullable
               as List<List<int>>,
+      showSkipMessage: null == showSkipMessage
+          ? _value.showSkipMessage
+          : showSkipMessage // ignore: cast_nullable_to_non_nullable
+              as bool,
     ));
   }
 }
@@ -142,7 +155,8 @@ class _$GameStateImpl extends _GameState {
       {required final List<List<int>> board,
       required this.currentPlayer,
       required this.winner,
-      required final List<List<int>> validMoves})
+      required final List<List<int>> validMoves,
+      this.showSkipMessage = false})
       : _board = board,
         _validMoves = validMoves,
         super._();
@@ -168,8 +182,12 @@ class _$GameStateImpl extends _GameState {
   }
 
   @override
+  @JsonKey()
+  final bool showSkipMessage;
+
+  @override
   String toString() {
-    return 'GameState(board: $board, currentPlayer: $currentPlayer, winner: $winner, validMoves: $validMoves)';
+    return 'GameState(board: $board, currentPlayer: $currentPlayer, winner: $winner, validMoves: $validMoves, showSkipMessage: $showSkipMessage)';
   }
 
   @override
@@ -182,7 +200,9 @@ class _$GameStateImpl extends _GameState {
                 other.currentPlayer == currentPlayer) &&
             (identical(other.winner, winner) || other.winner == winner) &&
             const DeepCollectionEquality()
-                .equals(other._validMoves, _validMoves));
+                .equals(other._validMoves, _validMoves) &&
+            (identical(other.showSkipMessage, showSkipMessage) ||
+                other.showSkipMessage == showSkipMessage));
   }
 
   @override
@@ -191,7 +211,8 @@ class _$GameStateImpl extends _GameState {
       const DeepCollectionEquality().hash(_board),
       currentPlayer,
       winner,
-      const DeepCollectionEquality().hash(_validMoves));
+      const DeepCollectionEquality().hash(_validMoves),
+      showSkipMessage);
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.
@@ -207,7 +228,8 @@ abstract class _GameState extends GameState {
       {required final List<List<int>> board,
       required final int currentPlayer,
       required final int winner,
-      required final List<List<int>> validMoves}) = _$GameStateImpl;
+      required final List<List<int>> validMoves,
+      final bool showSkipMessage}) = _$GameStateImpl;
   const _GameState._() : super._();
 
   @override
@@ -218,6 +240,8 @@ abstract class _GameState extends GameState {
   int get winner;
   @override
   List<List<int>> get validMoves;
+  @override
+  bool get showSkipMessage;
 
   /// Create a copy of GameState
   /// with the given fields replaced by the non-null parameter values.

@@ -14,6 +14,7 @@ class GameState with _$GameState {
     required int currentPlayer,
     required int winner,
     required List<List<int>> validMoves,
+    @Default(false) bool showSkipMessage,
   }) = _GameState;
 
   const GameState._();
@@ -51,7 +52,12 @@ class GameViewModel extends Notifier<GameState> {
     state = state.copyWith(
       currentPlayer: nextPlayer,
       validMoves: _logic.getValidMoves(nextPlayer),
+      showSkipMessage: true,
     );
+  }
+
+  void hideSkipMessage() {
+    state = state.copyWith(showSkipMessage: false);
   }
 
   void resetGame() {

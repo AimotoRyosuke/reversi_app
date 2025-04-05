@@ -131,7 +131,10 @@ class _GameContent extends ConsumerWidget {
                 gameViewModel.applyMove(row, col);
               },
             ),
-            if (gameState.validMoves.isEmpty) const SkipMessage(),
+            if (gameState.showSkipMessage)
+              SkipMessage(
+                onEnd: () => gameViewModel.hideSkipMessage(),
+              ),
           ],
         ),
         const Spacer(),
