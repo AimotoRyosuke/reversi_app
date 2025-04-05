@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reversi_app/routes.dart';
+import 'package:reversi_app/ui/cpu_game_screen.dart';
 import 'package:reversi_app/ui/local_multiplayer_screen.dart';
 import 'package:reversi_app/ui/top_screen.dart';
 
@@ -46,7 +47,7 @@ class _MyAppState extends State<MyApp> {
         ),
         GoRoute(
           path: Routes.cpu,
-          builder: (context, state) => const Placeholder(),
+          builder: (context, state) => const CpuGameScreen(),
         ),
         GoRoute(
           path: Routes.online,
