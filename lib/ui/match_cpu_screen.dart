@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reversi_app/ui/game_board.dart';
-import 'package:reversi_app/ui/score.dart';
-import 'package:reversi_app/ui/skip_message.dart';
-import 'package:reversi_app/ui/winner_dialog.dart';
-import 'package:reversi_app/view_model/cpu_game_view_model.dart';
+import 'package:reversi_app/ui/components/game_board.dart';
+import 'package:reversi_app/ui/components/score.dart';
+import 'package:reversi_app/ui/components/skip_message.dart';
+import 'package:reversi_app/ui/components/winner_dialog.dart';
+import 'package:reversi_app/view_model/match_cpu_view_model.dart';
 
-class CpuGameScreen extends ConsumerStatefulWidget {
-  const CpuGameScreen({super.key});
+class MatchCpuScreen extends ConsumerStatefulWidget {
+  const MatchCpuScreen({super.key});
 
   @override
-  ConsumerState<CpuGameScreen> createState() => _CpuGameScreenState();
+  ConsumerState<MatchCpuScreen> createState() => _MatchCpuScreenState();
 }
 
 class _GameSettings {
@@ -20,10 +20,10 @@ class _GameSettings {
     required this.difficultyLevel,
   });
   final PlayerChoice playerChoice;
-  final DifficultyLevel difficultyLevel;
+  final CpuDifficulty difficultyLevel;
 }
 
-class _CpuGameScreenState extends ConsumerState<CpuGameScreen> {
+class _MatchCpuScreenState extends ConsumerState<MatchCpuScreen> {
   @override
   void initState() {
     super.initState();
@@ -34,8 +34,8 @@ class _CpuGameScreenState extends ConsumerState<CpuGameScreen> {
   }
 
   Future<void> _showGameSettingsDialog() async {
-    final defaultPiece = ref.read(cpuGameProvider).playerChoice;
-    final defaultDifficulty = ref.read(cpuGameProvider).difficulty;
+    final defaultPiece = ref.read(matchCpuProvider).playerChoice;
+    final defaultDifficulty = ref.read(matchCpuProvider).difficulty;
     final settings = await showDialog<_GameSettings>(
       context: context,
       barrierDismissible: false,
@@ -48,7 +48,7 @@ class _CpuGameScreenState extends ConsumerState<CpuGameScreen> {
     );
 
     if (settings != null) {
-      ref.read(cpuGameProvider.notifier).startGameWithChoice(
+      ref.read(matchCpuProvider.notifier).startGameWithChoice(
             settings.playerChoice,
             settings.difficultyLevel,
           );
@@ -57,18 +57,20 @@ class _CpuGameScreenState extends ConsumerState<CpuGameScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final cpuState = ref.watch(cpuGameProvider);
+    final cpuState = ref.watch(matchCpuProvider);
 
     // CPU対戦での勝者が決まったらダイアログ表示
     ref.listen(
-      cpuGameProvider.select((state) => state.winner),
+      matchCpuProvider.select((s) => s.winner),
       (_, winner) {
+        final yourPiece = cpuState.playerPiece;
+        final isWinner = winner == yourPiece;
         if (winner != 0) {
           showDialog<void>(
             context: context,
             builder: (context) => WinnerDialog(
-              winnerName: winner == 1 ? '黒' : '白',
-              loserName: winner == 1 ? '白' : '黒',
+              winnerName: isWinner ? 'あなた' : 'CPU',
+              loserName: !isWinner ? 'あなた' : 'CPU',
               winnerScore:
                   winner == 1 ? cpuState.blackScore : cpuState.whiteScore,
               loserScore:
@@ -91,7 +93,7 @@ class _CpuGameScreenState extends ConsumerState<CpuGameScreen> {
           },
         ),
         title: const Text(
-          'オセロ',
+          'CPU対戦',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
@@ -129,12 +131,12 @@ class _GameSettingsDialog extends StatefulWidget {
   @override
   State<_GameSettingsDialog> createState() => _GameSettingsDialogState();
   final PlayerChoice defaultPiece;
-  final DifficultyLevel defaultDifficulty;
+  final CpuDifficulty defaultDifficulty;
 }
 
 class _GameSettingsDialogState extends State<_GameSettingsDialog> {
   late PlayerChoice _selectedPiece;
-  late DifficultyLevel _selectedDifficulty;
+  late CpuDifficulty _selectedDifficulty;
 
   @override
   void initState() {
@@ -195,9 +197,9 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildDifficultyOption(DifficultyLevel.easy, '初級'),
-                _buildDifficultyOption(DifficultyLevel.medium, '中級'),
-                _buildDifficultyOption(DifficultyLevel.difficult, '上級'),
+                _buildDifficultyOption(CpuDifficulty.easy, '初級'),
+                _buildDifficultyOption(CpuDifficulty.medium, '中級'),
+                _buildDifficultyOption(CpuDifficulty.hard, '上級'),
               ],
             ),
             const SizedBox(height: 24),
@@ -262,7 +264,7 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
               ),
               borderRadius: BorderRadius.circular(8),
               color: _selectedPiece == choice
-                  ? Colors.blue.withOpacity(0.1)
+                  ? Colors.blue.withValues(alpha: 0.1)
                   : null,
             ),
             child: Center(
@@ -281,7 +283,7 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
     );
   }
 
-  Widget _buildDifficultyOption(DifficultyLevel difficulty, String label) {
+  Widget _buildDifficultyOption(CpuDifficulty difficulty, String label) {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
@@ -302,7 +304,7 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
               ),
               borderRadius: BorderRadius.circular(8),
               color: _selectedDifficulty == difficulty
-                  ? Colors.blue.withOpacity(0.1)
+                  ? Colors.blue.withValues(alpha: 0.1)
                   : null,
             ),
             child: Center(
@@ -327,8 +329,8 @@ class _GameContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cpuState = ref.watch(cpuGameProvider);
-    final cpuViewModel = ref.read(cpuGameProvider.notifier);
+    final cpuState = ref.watch(matchCpuProvider);
+    final cpuViewModel = ref.read(matchCpuProvider.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -337,7 +339,7 @@ class _GameContent extends ConsumerWidget {
           blackScore: cpuState.blackScore,
           whiteScore: cpuState.whiteScore,
         ),
-        const Spacer(flex: 1),
+        const Spacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -348,11 +350,18 @@ class _GameContent extends ConsumerWidget {
                 shape: BoxShape.circle,
                 color:
                     cpuState.currentPlayer == 1 ? Colors.black : Colors.white,
+                border: Border.all(
+                  color: cpuState.currentPlayer == 1
+                      ? Colors.black
+                      : Colors.grey.shade400,
+                ),
               ),
             ),
             const SizedBox(width: 8),
             Text(
-              cpuState.currentPlayer == 1 ? '黒のターン' : '白のターン',
+              cpuState.currentPlayer == cpuState.playerPiece
+                  ? 'あなたのターン'
+                  : 'CPUのターン',
               style: const TextStyle(fontSize: 24),
             ),
           ],
@@ -361,11 +370,14 @@ class _GameContent extends ConsumerWidget {
         Stack(
           alignment: Alignment.center,
           children: [
-            GameBoardWidget(
-              board: cpuState.board,
-              validMoves: cpuState.validMoves,
-              player: cpuState.currentPlayer,
-              onCellTap: cpuViewModel.applyMove,
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: GameBoardWidget(
+                board: cpuState.board,
+                validMoves: cpuState.validMoves,
+                player: cpuState.currentPlayer,
+                onCellTap: cpuViewModel.applyMove,
+              ),
             ),
             if (cpuState.showSkipMessage)
               SkipMessage(

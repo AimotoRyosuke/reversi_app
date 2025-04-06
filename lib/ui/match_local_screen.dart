@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reversi_app/ui/game_board.dart';
-import 'package:reversi_app/ui/score.dart';
-import 'package:reversi_app/ui/skip_message.dart';
-import 'package:reversi_app/ui/winner_dialog.dart';
-import 'package:reversi_app/view_model/game_view_model.dart';
+import 'package:reversi_app/ui/components/game_board.dart';
+import 'package:reversi_app/ui/components/score.dart';
+import 'package:reversi_app/ui/components/skip_message.dart';
+import 'package:reversi_app/ui/components/winner_dialog.dart';
+import 'package:reversi_app/view_model/match_local_view_model.dart';
 
-class LocalMultiplayerScreen extends ConsumerWidget {
-  const LocalMultiplayerScreen({super.key});
+class MatchLocalScreen extends ConsumerWidget {
+  const MatchLocalScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gameViewModel = ref.read(gameProvider.notifier);
+    final matchLocalViewModel = ref.read(matchLocalProvider.notifier);
 
     ref.listen(
-      gameProvider.select((state) => state.winner),
+      matchLocalProvider.select((state) => state.winner),
       (_, winner) {
         if (winner != 0) {
           showDialog<void>(
@@ -23,11 +23,11 @@ class LocalMultiplayerScreen extends ConsumerWidget {
               winnerName: winner == 1 ? '黒' : '白',
               loserName: winner == 1 ? '白' : '黒',
               winnerScore: winner == 1
-                  ? ref.read(gameProvider).blackScore
-                  : ref.read(gameProvider).whiteScore,
+                  ? ref.read(matchLocalProvider).blackScore
+                  : ref.read(matchLocalProvider).whiteScore,
               loserScore: winner == 1
-                  ? ref.read(gameProvider).whiteScore
-                  : ref.read(gameProvider).blackScore,
+                  ? ref.read(matchLocalProvider).whiteScore
+                  : ref.read(matchLocalProvider).blackScore,
             ),
           );
         }
@@ -46,14 +46,14 @@ class LocalMultiplayerScreen extends ConsumerWidget {
           },
         ),
         title: const Text(
-          'オセロ',
+          'ローカル対人戦',
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: true,
         titleSpacing: 0,
         actions: [
           TextButton(
-            onPressed: gameViewModel.resetGame,
+            onPressed: matchLocalViewModel.resetGame,
             style: TextButton.styleFrom(
               padding: EdgeInsets.zero,
             ),
@@ -81,8 +81,8 @@ class _GameContent extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final gameState = ref.watch(gameProvider);
-    final gameViewModel = ref.read(gameProvider.notifier);
+    final gameState = ref.watch(matchLocalProvider);
+    final gameViewModel = ref.read(matchLocalProvider.notifier);
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +91,7 @@ class _GameContent extends ConsumerWidget {
           blackScore: gameState.blackScore,
           whiteScore: gameState.whiteScore,
         ),
-        const Spacer(flex: 1),
+        const Spacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

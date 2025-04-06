@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reversi_app/view_model/game_view_model.dart';
+import 'package:reversi_app/view_model/match_local_view_model.dart';
 
 class WinnerDialog extends ConsumerWidget {
   const WinnerDialog({
@@ -47,7 +47,7 @@ class WinnerDialog extends ConsumerWidget {
       actions: [
         TextButton(
           onPressed: () {
-            ref.read(gameProvider.notifier).resetGame();
+            ref.read(matchLocalProvider.notifier).resetGame();
             Navigator.of(context).pop();
           },
           child: const Text('OK'),

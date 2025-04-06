@@ -3,7 +3,7 @@
 // ignore_for_file: type=lint
 // ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
 
-part of 'local_multiplayer_view_model.dart';
+part of 'match_cpu_view_model.dart';
 
 // **************************************************************************
 // FreezedGenerator
@@ -15,46 +15,52 @@ final _privateConstructorUsedError = UnsupportedError(
     'It seems like you constructed your class using `MyClass._()`. This constructor is only meant to be used by freezed and you are not supposed to need it nor use it.\nPlease check the documentation here for more information: https://github.com/rrousselGit/freezed#adding-getters-and-methods-to-our-models');
 
 /// @nodoc
-mixin _$LocalMultiplayerState {
+mixin _$MatchCpuState {
   List<List<int>> get board => throw _privateConstructorUsedError;
   int get currentPlayer => throw _privateConstructorUsedError;
   int get winner => throw _privateConstructorUsedError;
   List<List<int>> get validMoves => throw _privateConstructorUsedError;
   bool get showSkipMessage => throw _privateConstructorUsedError;
+  int get playerPiece =>
+      throw _privateConstructorUsedError; // 1 for black, -1 for white
+  PlayerChoice get playerChoice => throw _privateConstructorUsedError;
+  CpuDifficulty get difficulty => throw _privateConstructorUsedError;
 
-  /// Create a copy of LocalMultiplayerState
+  /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
-  $LocalMultiplayerStateCopyWith<LocalMultiplayerState> get copyWith =>
+  $MatchCpuStateCopyWith<MatchCpuState> get copyWith =>
       throw _privateConstructorUsedError;
 }
 
 /// @nodoc
-abstract class $LocalMultiplayerStateCopyWith<$Res> {
-  factory $LocalMultiplayerStateCopyWith(LocalMultiplayerState value,
-          $Res Function(LocalMultiplayerState) then) =
-      _$LocalMultiplayerStateCopyWithImpl<$Res, LocalMultiplayerState>;
+abstract class $MatchCpuStateCopyWith<$Res> {
+  factory $MatchCpuStateCopyWith(
+          MatchCpuState value, $Res Function(MatchCpuState) then) =
+      _$MatchCpuStateCopyWithImpl<$Res, MatchCpuState>;
   @useResult
   $Res call(
       {List<List<int>> board,
       int currentPlayer,
       int winner,
       List<List<int>> validMoves,
-      bool showSkipMessage});
+      bool showSkipMessage,
+      int playerPiece,
+      PlayerChoice playerChoice,
+      CpuDifficulty difficulty});
 }
 
 /// @nodoc
-class _$LocalMultiplayerStateCopyWithImpl<$Res,
-        $Val extends LocalMultiplayerState>
-    implements $LocalMultiplayerStateCopyWith<$Res> {
-  _$LocalMultiplayerStateCopyWithImpl(this._value, this._then);
+class _$MatchCpuStateCopyWithImpl<$Res, $Val extends MatchCpuState>
+    implements $MatchCpuStateCopyWith<$Res> {
+  _$MatchCpuStateCopyWithImpl(this._value, this._then);
 
   // ignore: unused_field
   final $Val _value;
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of LocalMultiplayerState
+  /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -64,6 +70,9 @@ class _$LocalMultiplayerStateCopyWithImpl<$Res,
     Object? winner = null,
     Object? validMoves = null,
     Object? showSkipMessage = null,
+    Object? playerPiece = null,
+    Object? playerChoice = null,
+    Object? difficulty = null,
   }) {
     return _then(_value.copyWith(
       board: null == board
@@ -86,17 +95,28 @@ class _$LocalMultiplayerStateCopyWithImpl<$Res,
           ? _value.showSkipMessage
           : showSkipMessage // ignore: cast_nullable_to_non_nullable
               as bool,
+      playerPiece: null == playerPiece
+          ? _value.playerPiece
+          : playerPiece // ignore: cast_nullable_to_non_nullable
+              as int,
+      playerChoice: null == playerChoice
+          ? _value.playerChoice
+          : playerChoice // ignore: cast_nullable_to_non_nullable
+              as PlayerChoice,
+      difficulty: null == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as CpuDifficulty,
     ) as $Val);
   }
 }
 
 /// @nodoc
-abstract class _$$LocalMultiplayerStateImplCopyWith<$Res>
-    implements $LocalMultiplayerStateCopyWith<$Res> {
-  factory _$$LocalMultiplayerStateImplCopyWith(
-          _$LocalMultiplayerStateImpl value,
-          $Res Function(_$LocalMultiplayerStateImpl) then) =
-      __$$LocalMultiplayerStateImplCopyWithImpl<$Res>;
+abstract class _$$MatchCpuStateImplCopyWith<$Res>
+    implements $MatchCpuStateCopyWith<$Res> {
+  factory _$$MatchCpuStateImplCopyWith(
+          _$MatchCpuStateImpl value, $Res Function(_$MatchCpuStateImpl) then) =
+      __$$MatchCpuStateImplCopyWithImpl<$Res>;
   @override
   @useResult
   $Res call(
@@ -104,19 +124,21 @@ abstract class _$$LocalMultiplayerStateImplCopyWith<$Res>
       int currentPlayer,
       int winner,
       List<List<int>> validMoves,
-      bool showSkipMessage});
+      bool showSkipMessage,
+      int playerPiece,
+      PlayerChoice playerChoice,
+      CpuDifficulty difficulty});
 }
 
 /// @nodoc
-class __$$LocalMultiplayerStateImplCopyWithImpl<$Res>
-    extends _$LocalMultiplayerStateCopyWithImpl<$Res,
-        _$LocalMultiplayerStateImpl>
-    implements _$$LocalMultiplayerStateImplCopyWith<$Res> {
-  __$$LocalMultiplayerStateImplCopyWithImpl(_$LocalMultiplayerStateImpl _value,
-      $Res Function(_$LocalMultiplayerStateImpl) _then)
+class __$$MatchCpuStateImplCopyWithImpl<$Res>
+    extends _$MatchCpuStateCopyWithImpl<$Res, _$MatchCpuStateImpl>
+    implements _$$MatchCpuStateImplCopyWith<$Res> {
+  __$$MatchCpuStateImplCopyWithImpl(
+      _$MatchCpuStateImpl _value, $Res Function(_$MatchCpuStateImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of LocalMultiplayerState
+  /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
@@ -126,8 +148,11 @@ class __$$LocalMultiplayerStateImplCopyWithImpl<$Res>
     Object? winner = null,
     Object? validMoves = null,
     Object? showSkipMessage = null,
+    Object? playerPiece = null,
+    Object? playerChoice = null,
+    Object? difficulty = null,
   }) {
-    return _then(_$LocalMultiplayerStateImpl(
+    return _then(_$MatchCpuStateImpl(
       board: null == board
           ? _value._board
           : board // ignore: cast_nullable_to_non_nullable
@@ -148,19 +173,34 @@ class __$$LocalMultiplayerStateImplCopyWithImpl<$Res>
           ? _value.showSkipMessage
           : showSkipMessage // ignore: cast_nullable_to_non_nullable
               as bool,
+      playerPiece: null == playerPiece
+          ? _value.playerPiece
+          : playerPiece // ignore: cast_nullable_to_non_nullable
+              as int,
+      playerChoice: null == playerChoice
+          ? _value.playerChoice
+          : playerChoice // ignore: cast_nullable_to_non_nullable
+              as PlayerChoice,
+      difficulty: null == difficulty
+          ? _value.difficulty
+          : difficulty // ignore: cast_nullable_to_non_nullable
+              as CpuDifficulty,
     ));
   }
 }
 
 /// @nodoc
 
-class _$LocalMultiplayerStateImpl extends _LocalMultiplayerState {
-  const _$LocalMultiplayerStateImpl(
+class _$MatchCpuStateImpl extends _MatchCpuState {
+  const _$MatchCpuStateImpl(
       {required final List<List<int>> board,
       required this.currentPlayer,
       required this.winner,
       required final List<List<int>> validMoves,
-      this.showSkipMessage = false})
+      this.showSkipMessage = false,
+      this.playerPiece = 1,
+      this.playerChoice = PlayerChoice.black,
+      this.difficulty = CpuDifficulty.medium})
       : _board = board,
         _validMoves = validMoves,
         super._();
@@ -188,17 +228,27 @@ class _$LocalMultiplayerStateImpl extends _LocalMultiplayerState {
   @override
   @JsonKey()
   final bool showSkipMessage;
+  @override
+  @JsonKey()
+  final int playerPiece;
+// 1 for black, -1 for white
+  @override
+  @JsonKey()
+  final PlayerChoice playerChoice;
+  @override
+  @JsonKey()
+  final CpuDifficulty difficulty;
 
   @override
   String toString() {
-    return 'LocalMultiplayerState(board: $board, currentPlayer: $currentPlayer, winner: $winner, validMoves: $validMoves, showSkipMessage: $showSkipMessage)';
+    return 'MatchCpuState(board: $board, currentPlayer: $currentPlayer, winner: $winner, validMoves: $validMoves, showSkipMessage: $showSkipMessage, playerPiece: $playerPiece, playerChoice: $playerChoice, difficulty: $difficulty)';
   }
 
   @override
   bool operator ==(Object other) {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
-            other is _$LocalMultiplayerStateImpl &&
+            other is _$MatchCpuStateImpl &&
             const DeepCollectionEquality().equals(other._board, _board) &&
             (identical(other.currentPlayer, currentPlayer) ||
                 other.currentPlayer == currentPlayer) &&
@@ -206,7 +256,13 @@ class _$LocalMultiplayerStateImpl extends _LocalMultiplayerState {
             const DeepCollectionEquality()
                 .equals(other._validMoves, _validMoves) &&
             (identical(other.showSkipMessage, showSkipMessage) ||
-                other.showSkipMessage == showSkipMessage));
+                other.showSkipMessage == showSkipMessage) &&
+            (identical(other.playerPiece, playerPiece) ||
+                other.playerPiece == playerPiece) &&
+            (identical(other.playerChoice, playerChoice) ||
+                other.playerChoice == playerChoice) &&
+            (identical(other.difficulty, difficulty) ||
+                other.difficulty == difficulty));
   }
 
   @override
@@ -216,26 +272,31 @@ class _$LocalMultiplayerStateImpl extends _LocalMultiplayerState {
       currentPlayer,
       winner,
       const DeepCollectionEquality().hash(_validMoves),
-      showSkipMessage);
+      showSkipMessage,
+      playerPiece,
+      playerChoice,
+      difficulty);
 
-  /// Create a copy of LocalMultiplayerState
+  /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   @pragma('vm:prefer-inline')
-  _$$LocalMultiplayerStateImplCopyWith<_$LocalMultiplayerStateImpl>
-      get copyWith => __$$LocalMultiplayerStateImplCopyWithImpl<
-          _$LocalMultiplayerStateImpl>(this, _$identity);
+  _$$MatchCpuStateImplCopyWith<_$MatchCpuStateImpl> get copyWith =>
+      __$$MatchCpuStateImplCopyWithImpl<_$MatchCpuStateImpl>(this, _$identity);
 }
 
-abstract class _LocalMultiplayerState extends LocalMultiplayerState {
-  const factory _LocalMultiplayerState(
+abstract class _MatchCpuState extends MatchCpuState {
+  const factory _MatchCpuState(
       {required final List<List<int>> board,
       required final int currentPlayer,
       required final int winner,
       required final List<List<int>> validMoves,
-      final bool showSkipMessage}) = _$LocalMultiplayerStateImpl;
-  const _LocalMultiplayerState._() : super._();
+      final bool showSkipMessage,
+      final int playerPiece,
+      final PlayerChoice playerChoice,
+      final CpuDifficulty difficulty}) = _$MatchCpuStateImpl;
+  const _MatchCpuState._() : super._();
 
   @override
   List<List<int>> get board;
@@ -247,11 +308,17 @@ abstract class _LocalMultiplayerState extends LocalMultiplayerState {
   List<List<int>> get validMoves;
   @override
   bool get showSkipMessage;
+  @override
+  int get playerPiece; // 1 for black, -1 for white
+  @override
+  PlayerChoice get playerChoice;
+  @override
+  CpuDifficulty get difficulty;
 
-  /// Create a copy of LocalMultiplayerState
+  /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
   @override
   @JsonKey(includeFromJson: false, includeToJson: false)
-  _$$LocalMultiplayerStateImplCopyWith<_$LocalMultiplayerStateImpl>
-      get copyWith => throw _privateConstructorUsedError;
+  _$$MatchCpuStateImplCopyWith<_$MatchCpuStateImpl> get copyWith =>
+      throw _privateConstructorUsedError;
 }

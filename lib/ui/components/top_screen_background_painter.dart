@@ -7,10 +7,12 @@ class TopScreenBackgroundPainter extends CustomPainter {
       ..shader = RadialGradient(
         colors: [Colors.green.shade200, Colors.teal.shade700],
         radius: 1,
-      ).createShader(Rect.fromCircle(
-        center: Offset(size.width / 2, size.height / 3),
-        radius: size.width,
-      ));
+      ).createShader(
+        Rect.fromCircle(
+          center: Offset(size.width / 2, size.height / 3),
+          radius: size.width,
+        ),
+      );
 
     canvas.drawRect(Rect.fromLTWH(0, 0, size.width, size.height), paint);
 
