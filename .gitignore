@@ -46,3 +46,6 @@ app.*.map.json
 
 # repomix output
 repomix-output.xml
+
+## test coverage
+/coverage/*
