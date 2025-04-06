@@ -1,3 +1,5 @@
+import 'package:reversi_app/constants.dart';
+
 /// Represents the logic for the Reversi game.
 class ReversiLogic {
   ReversiLogic() {
@@ -5,7 +7,7 @@ class ReversiLogic {
     currentPlayer = 1; // Black starts
     initializeBoard();
   }
-  static const int boardSize = 8;
+  static const int boardSize = Constants.boardSize;
   late List<List<int>> board;
   late int currentPlayer;
 
@@ -19,16 +21,7 @@ class ReversiLogic {
 
   bool isValidMove(int row, int col, int player) {
     if (board[row][col] != 0) return false;
-    final directions = <List<int>>[
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-    ];
+    const directions = Constants.dxdy;
     for (final d in directions) {
       var r = row + d[0];
       var c = col + d[1];
@@ -72,16 +65,7 @@ class ReversiLogic {
   }
 
   void flipStones(int row, int col, int player) {
-    final directions = <List<int>>[
-      [-1, -1],
-      [-1, 0],
-      [-1, 1],
-      [0, -1],
-      [0, 1],
-      [1, -1],
-      [1, 0],
-      [1, 1],
-    ];
+    const directions = Constants.dxdy;
     for (final d in directions) {
       final potentialFlips = <List<int>>[];
       var r = row + d[0];
