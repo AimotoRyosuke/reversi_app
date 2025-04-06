@@ -6,9 +6,7 @@ Flutter製のリバーシ（オセロ）ゲームアプリです。
 
 シンプルで直感的なFlutterベースのオセロ（リバーシ）ゲームアプリケーションです。
 
-<img src="docs/images/top.png" alt="Top Screen" width="250"/>
-<img src="docs/images/setting.png" alt="Setting Dialog" width="250"/>
-<img src="docs/images/match.png" alt="Math Screen" width="250"/>
+<img src="docs/images/top.png" alt="Top Screen" width="250"/><img src="docs/images/setting.png" alt="Setting Dialog" width="250"/><img src="docs/images/match.png" alt="Math Screen" width="250"/>
 
 ### 主な機能
 
