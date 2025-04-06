@@ -14,13 +14,13 @@ Flutter製のリバーシ（オセロ）ゲームアプリです。
 - スコアのリアルタイム表示
 - ゲームリセット機能
 - ローカル対人戦モード
-- CPUとの対戦モード（実装中）
+- CPUとの対戦モード
 - オンライン対戦モード（計画中）
 
 ### 技術スタック
 
-- Flutter
-- Dart
+- Flutter 3.29.2
+- Dart 3.7.2
 - hooks_riverpod: 状態管理
 - go_router: ルーティング
 - freezed: イミュータブルデータクラス生成
@@ -68,24 +68,27 @@ flutter run
 
 ## プロジェクト構造
 
-```
+```tree
 lib/
-├── game/           # ゲームロジック
-│   ├── reversi_logic.dart  # リバーシのコアロジック
-│   └── ai.dart      # CPUプレイヤーのAI実装
-├── ui/             # UI関連のウィジェット
-│   ├── game_board.dart      # ゲームボード表示
-│   ├── local_multiplayer_screen.dart   # ローカル対戦画面
-│   ├── score.dart           # スコア表示
-│   ├── skip_message.dart    # スキップメッセージ
-│   ├── top_screen.dart      # トップメニュー画面
-│   ├── top_screen_background_painter.dart  # トップ画面の背景
-│   └── winner_dialog.dart   # 勝者表示ダイアログ
-├── view_model/     # ビューモデル
-│   ├── game_view_model.dart     # ゲーム状態管理
-│   └── game_view_model.freezed.dart  # 自動生成コード
-├── main.dart       # アプリのエントリーポイント
-└── routes.dart     # アプリのルート定義
+├── constants.dart                              # 定数定義
+├── game/                                       # ゲームロジック
+│   ├── reversi_ai.dart                         # CPUロジック
+│   └── reversi_logic.dart                      # リバーシのコアロジック
+├── main.dart                                   # エントリーポイント
+├── routes.dart                                 # ルーティング設定
+├── ui/                                         # UI関連
+│   ├── components/                             # UIコンポーネント
+│   │   ├── game_board.dart                     # ゲームボード
+│   │   ├── score.dart                          # スコア表示
+│   │   ├── skip_message.dart                   # スキップメッセージ
+│   │   ├── top_screen_background_painter.dart  # トップ画面の背景描画
+│   │   └── winner_dialog.dart                  # 勝者ダイアログ
+│   ├── match_cpu_screen.dart                   # CPU対戦画面
+│   ├── match_local_screen.dart                 # ローカル対戦画面
+│   └── top_screen.dart                         # トップ画面
+└── view_model/                                 # ビューモデル
+    ├── match_cpu_view_model.dart               # CPU対戦ビューモデル
+    ├── match_local_view_model.dart             # ローカル対戦ビューモデル
 ```
 
 ## 開発ガイド
@@ -117,12 +120,11 @@ lib/
 
 ### サポート
 
-- 問題が解決しない場合は、[issue tracker](https://github.com/yourusername/reversi_app/issues) に問題を報告してください。
+- 問題が解決しない場合は、[issue tracker](https://github.com/AimotoRyosuke/reversi_app/issues) に問題を報告してください。
 - その他の質問やサポートが必要な場合は、プロジェクトのメンテナーに連絡してください。
 
 ## 将来の展望
 
-- CPU対戦モードの完全実装（難易度レベル調整機能）
 - 対人オンライン対戦モードの実装
 - ゲームプレイ履歴の保存と再生機能
 - カスタマイズ可能なテーマと石のデザイン
