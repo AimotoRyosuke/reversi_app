@@ -2,48 +2,53 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reversi_app/game/reversi_logic.dart';
 
-part 'game_view_model.freezed.dart';
+part 'match_local_view_model.freezed.dart';
 
-final gameProvider =
-    NotifierProvider<GameViewModel, GameState>(GameViewModel.new);
+final matchLocalProvider =
+    NotifierProvider<MatchLocalViewModel, MatchLocalState>(
+  MatchLocalViewModel.new,
+);
 
 @freezed
-class GameState with _$GameState {
-  const factory GameState({
+class MatchLocalState with _$MatchLocalState {
+  const factory MatchLocalState({
     required List<List<int>> board,
     required int currentPlayer,
     required int winner,
     required List<List<int>> validMoves,
     @Default(false) bool showSkipMessage,
-  }) = _GameState;
+  }) = _MatchLocalState;
 
-  const GameState._();
+  const MatchLocalState._();
 
-  /// getter for black score
-  int get blackScore => _calculateScore(board, 1);
-
-  /// getter for white score
-  int get whiteScore => _calculateScore(board, -1);
-
-  int _calculateScore(List<List<int>> board, int player) {
+  int get blackScore {
     var score = 0;
     for (final row in board) {
       for (final cell in row) {
-        if (cell == player) score++;
+        if (cell == 1) score++;
+      }
+    }
+    return score;
+  }
+
+  int get whiteScore {
+    var score = 0;
+    for (final row in board) {
+      for (final cell in row) {
+        if (cell == -1) score++;
       }
     }
     return score;
   }
 }
 
-/// ViewModel for the game logic
-class GameViewModel extends Notifier<GameState> {
+class MatchLocalViewModel extends Notifier<MatchLocalState> {
   late ReversiLogic _logic;
 
   @override
-  GameState build() {
+  MatchLocalState build() {
     _logic = ReversiLogic();
-    return GameState(
+    return MatchLocalState(
       board: _logic.board,
       currentPlayer: _logic.currentPlayer,
       winner: 0,
@@ -60,14 +65,13 @@ class GameViewModel extends Notifier<GameState> {
     );
   }
 
-  /// Hide the skip message
   void hideSkipMessage() {
     state = state.copyWith(showSkipMessage: false);
   }
 
   void resetGame() {
     _logic = ReversiLogic();
-    state = GameState(
+    state = MatchLocalState(
       board: _logic.board,
       currentPlayer: _logic.currentPlayer,
       winner: 0,
@@ -78,7 +82,7 @@ class GameViewModel extends Notifier<GameState> {
   void applyMove(int row, int col) {
     if (_logic.applyMove(row, col, state.currentPlayer)) {
       final winner = _logic.getWinner();
-      state = GameState(
+      state = MatchLocalState(
         board: _logic.board,
         currentPlayer: _logic.currentPlayer,
         winner: winner,

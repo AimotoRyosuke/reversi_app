@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:reversi_app/routes.dart';
-import 'package:reversi_app/ui/top_screen_background_painter.dart';
+import 'package:reversi_app/ui/components/top_screen_background_painter.dart';
 
 class TopScreen extends StatelessWidget {
   const TopScreen({super.key});
