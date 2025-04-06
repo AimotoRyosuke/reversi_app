@@ -154,7 +154,7 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,6 +200,7 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
                 _buildDifficultyOption(CpuDifficulty.easy, '初級'),
                 _buildDifficultyOption(CpuDifficulty.medium, '中級'),
                 _buildDifficultyOption(CpuDifficulty.hard, '上級'),
+                _buildDifficultyOption(CpuDifficulty.veryHard, '超級'),
               ],
             ),
             const SizedBox(height: 24),

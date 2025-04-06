@@ -13,7 +13,7 @@ final matchCpuProvider =
 
 enum PlayerChoice { black, white, random }
 
-enum CpuDifficulty { easy, medium, hard }
+enum CpuDifficulty { easy, medium, hard, veryHard }
 
 @freezed
 class MatchCpuState with _$MatchCpuState {
@@ -154,6 +154,12 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
             );
           case CpuDifficulty.hard:
             move = ReversiAi.selectMoveHard(
+              state.validMoves,
+              state.board,
+              state.currentPlayer,
+            );
+          case CpuDifficulty.veryHard:
+            move = ReversiAi.selectMoveVeryHard(
               state.validMoves,
               state.board,
               state.currentPlayer,
