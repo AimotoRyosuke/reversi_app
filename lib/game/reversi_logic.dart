@@ -1,6 +1,6 @@
 import 'package:reversi_app/constants.dart';
 
-/// Represents the logic for the Reversi game.
+/// リバーシのコアロジック
 class ReversiLogic {
   ReversiLogic() {
     board = List.generate(boardSize, (i) => List.filled(boardSize, 0));
