@@ -52,9 +52,9 @@ class GameBoardWidget extends StatelessWidget {
 
             // ヒント評価値を検索
             HintEvaluation? hintEval;
-            if (hintSettings != null && 
-                hintSettings!.displayMode != HintDisplayMode.none && 
-                hintEvaluations != null && 
+            if (hintSettings != null &&
+                hintSettings!.displayMode != HintDisplayMode.none &&
+                hintEvaluations != null &&
                 isValidMove) {
               hintEval = hintEvaluations!.firstWhere(
                 (hint) => hint.move[0] == row && hint.move[1] == col,
@@ -72,7 +72,8 @@ class GameBoardWidget extends StatelessWidget {
                 cellType: board[row][col],
                 isValidMove: isValidMove,
                 hintEvaluation: hintEval,
-                hintDisplayMode: hintSettings?.displayMode ?? HintDisplayMode.none,
+                hintDisplayMode:
+                    hintSettings?.displayMode ?? HintDisplayMode.none,
               ),
             );
           },
@@ -128,14 +129,17 @@ class _CellWidget extends StatelessWidget {
                         height: 32,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.black.withAlpha(51), // withOpacityの代わりにwithAlphaを使用
+                          color: Colors.black
+                              .withAlpha(51), // withOpacityの代わりにwithAlphaを使用
                         ),
                       )
                     : null,
           ),
-          
+
           // ヒント表示（評価値または色）
-          if (isValidMove && hintEvaluation != null && hintDisplayMode != HintDisplayMode.none)
+          if (isValidMove &&
+              hintEvaluation != null &&
+              hintDisplayMode != HintDisplayMode.none)
             Positioned(
               top: 2,
               left: 2,

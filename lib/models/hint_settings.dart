@@ -20,7 +20,7 @@ class HintSettings with _$HintSettings {
   const factory HintSettings({
     /// ヒント表示モード
     @Default(HintDisplayMode.none) HintDisplayMode displayMode,
-    
+
     /// ミニマックスアルゴリズムの深さ
     @Default(4) int minimaxDepth,
   }) = _HintSettings;

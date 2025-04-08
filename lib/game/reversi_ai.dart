@@ -704,11 +704,13 @@ class ReversiAi {
       // 絶対評価に基づいてスコアを正規化
       final normalizedScore = normalizeScore(score);
 
-      evaluations.add(HintEvaluation(
-        move: move,
-        score: score,
-        normalizedScore: normalizedScore,
-      ));
+      evaluations.add(
+        HintEvaluation(
+          move: move,
+          score: score,
+          normalizedScore: normalizedScore,
+        ),
+      );
     }
 
     return evaluations;

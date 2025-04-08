@@ -93,10 +93,10 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
       difficulty: difficulty,
       hintSettings: hintSettings ?? state.hintSettings,
     );
-    
+
     // ヒント評価値を更新
     _updateHintEvaluations();
-    
+
     // CPUが黒の場合にCPUのターンを開始
     if (state.currentPlayer != state.playerPiece && state.winner == 0) {
       _triggerCpuMove();
@@ -110,7 +110,7 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
       validMoves: _logic.getValidMoves(nextPlayer),
       showSkipMessage: true,
     );
-    
+
     // ヒント評価値を更新
     _updateHintEvaluations();
   }
@@ -131,10 +131,10 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
       difficulty: state.difficulty,
       hintSettings: state.hintSettings, // ヒント設定を保持
     );
-    
+
     // ヒント評価値を更新
     _updateHintEvaluations();
-    
+
     if (state.currentPlayer != state.playerPiece && state.winner == 0) {
       _triggerCpuMove();
     }
@@ -149,7 +149,7 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
         winner: winner,
         validMoves: _logic.getValidMoves(_logic.currentPlayer),
       );
-      
+
       // ヒント評価値を更新
       _updateHintEvaluations();
     }
@@ -167,7 +167,7 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
     state = state.copyWith(
       hintSettings: state.hintSettings.copyWith(displayMode: mode),
     );
-    
+
     // 表示モードが「なし」以外に変更された場合だけ評価値を計算
     if (mode != HintDisplayMode.none) {
       _updateHintEvaluations();
@@ -182,7 +182,7 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
     state = state.copyWith(
       hintSettings: state.hintSettings.copyWith(minimaxDepth: depth),
     );
-    
+
     // 深さを変更した場合は評価値を再計算
     if (state.hintSettings.displayMode != HintDisplayMode.none) {
       _updateHintEvaluations();
@@ -195,19 +195,19 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
     if (state.hintSettings.displayMode == HintDisplayMode.none) {
       return;
     }
-    
+
     // プレイヤーのターンのみヒントを表示
     if (state.currentPlayer != state.playerPiece) {
       state = state.copyWith(hintEvaluations: []);
       return;
     }
-    
+
     // 有効な手がない場合は評価値をクリア
     if (state.validMoves.isEmpty) {
       state = state.copyWith(hintEvaluations: []);
       return;
     }
-    
+
     // バックグラウンドで評価値を計算（UIをブロックしないため）
     Future.microtask(() {
       final evaluations = ReversiAi.calculateHintValues(
@@ -216,7 +216,7 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
         state.currentPlayer,
         depth: state.hintSettings.minimaxDepth,
       );
-      
+
       state = state.copyWith(hintEvaluations: evaluations);
     });
   }

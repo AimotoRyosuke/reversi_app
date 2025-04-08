@@ -44,18 +44,21 @@ void main() {
       test('初期盤面での有効な手が正しいこと', () {
         final validMoves = logic.getValidMoves(1);
         expect(
-            validMoves,
-            containsAll([
-              [2, 3],
-              [3, 2],
-              [4, 5],
-              [5, 4],
-            ]));
+          validMoves,
+          containsAll([
+            [2, 3],
+            [3, 2],
+            [4, 5],
+            [5, 4],
+          ]),
+        );
       });
 
       test('有効な手がない場合は空リストが返されること', () {
-        logic.board = List.generate(ReversiLogic.boardSize,
-            (_) => List.filled(ReversiLogic.boardSize, 1));
+        logic.board = List.generate(
+          ReversiLogic.boardSize,
+          (_) => List.filled(ReversiLogic.boardSize, 1),
+        );
         final validMoves = logic.getValidMoves(-1);
         expect(validMoves, isEmpty);
       });

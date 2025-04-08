@@ -328,8 +328,11 @@ class ReversiAi {
   /// ミニマックスアルゴリズムを使用した先読み
   /// 数手先までシミュレーションして最適な手を選ぶ
   static List<int> selectMoveVeryHard(
-      List<List<int>> validMoves, List<List<int>> board, int player,
-      {int depth = 4} // 先読みの深さをパラメータ化
+    List<List<int>> validMoves,
+    List<List<int>> board,
+    int player, {
+    int depth = 4,
+  } // 先読みの深さをパラメータ化
       ) {
     if (validMoves.isEmpty) return [];
 
@@ -677,8 +680,11 @@ class ReversiAi {
   /// 手の評価値を計算
   /// 返り値は各手の評価値のリスト
   static List<HintEvaluation> calculateHintValues(
-      List<List<int>> validMoves, List<List<int>> board, int player,
-      {int depth = 4}) {
+    List<List<int>> validMoves,
+    List<List<int>> board,
+    int player, {
+    int depth = 4,
+  }) {
     if (validMoves.isEmpty) return [];
 
     final evaluations = <HintEvaluation>[];
@@ -720,13 +726,13 @@ class ReversiAi {
   static int normalizeScore(double score, double maxScore, double minScore) {
     if (maxScore == minScore) return 100;
 
-    var normalizedScore = ((score - minScore) / (maxScore - minScore)) * 100;
+    final normalizedScore = ((score - minScore) / (maxScore - minScore)) * 100;
     return (normalizedScore / 5).round() * 5;
   }
 
   /// 評価値に対応する色を取得
   static Color getScoreColor(int normalizedScore) {
-    final Map<int, Color> scoreColors = {
+    final scoreColors = <int, Color>{
       100: const Color(0xFF0000FF), // 濃い青
       95: const Color(0xFF0033FF), // 青
       90: const Color(0xFF3333FF), // 青紫
