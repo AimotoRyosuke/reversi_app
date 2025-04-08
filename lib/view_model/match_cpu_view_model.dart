@@ -4,7 +4,8 @@ import 'dart:math';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:reversi_app/game/reversi_ai.dart';
-import 'package:reversi_app/game/reversi_logic.dart';
+import 'package:reversi_app/models/hint_settings.dart';
+import 'package:reversi_app/services/game/reversi_logic.dart';
 
 part 'match_cpu_view_model.freezed.dart';
 
@@ -26,6 +27,8 @@ class MatchCpuState with _$MatchCpuState {
     @Default(1) int playerPiece, // 1 for black, -1 for white
     @Default(PlayerChoice.black) PlayerChoice playerChoice,
     @Default(CpuDifficulty.medium) CpuDifficulty difficulty,
+    @Default(HintSettings()) HintSettings hintSettings,
+    @Default([]) List<HintEvaluation> hintEvaluations,
   }) = _MatchCpuState;
 
   const MatchCpuState._();
@@ -66,7 +69,11 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
   }
 
   /// 対戦開始時にプレイヤーが使用する駒と難易度を選択する
-  void startGameWithChoice(PlayerChoice choice, CpuDifficulty difficulty) {
+  void startGameWithChoice(
+    PlayerChoice choice,
+    CpuDifficulty difficulty, [
+    HintSettings? hintSettings,
+  ]) {
     int chosenPiece;
     if (choice == PlayerChoice.black) {
       chosenPiece = 1;
@@ -84,7 +91,12 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
       playerChoice: choice,
       playerPiece: chosenPiece,
       difficulty: difficulty,
+      hintSettings: hintSettings ?? state.hintSettings,
     );
+    
+    // ヒント評価値を更新
+    _updateHintEvaluations();
+    
     // CPUが黒の場合にCPUのターンを開始
     if (state.currentPlayer != state.playerPiece && state.winner == 0) {
       _triggerCpuMove();
@@ -98,6 +110,9 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
       validMoves: _logic.getValidMoves(nextPlayer),
       showSkipMessage: true,
     );
+    
+    // ヒント評価値を更新
+    _updateHintEvaluations();
   }
 
   void hideSkipMessage() {
@@ -114,7 +129,12 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
       playerChoice: state.playerChoice,
       playerPiece: state.playerPiece,
       difficulty: state.difficulty,
+      hintSettings: state.hintSettings, // ヒント設定を保持
     );
+    
+    // ヒント評価値を更新
+    _updateHintEvaluations();
+    
     if (state.currentPlayer != state.playerPiece && state.winner == 0) {
       _triggerCpuMove();
     }
@@ -129,6 +149,9 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
         winner: winner,
         validMoves: _logic.getValidMoves(_logic.currentPlayer),
       );
+      
+      // ヒント評価値を更新
+      _updateHintEvaluations();
     }
     if (state.winner != 0) return;
     if (state.validMoves.isEmpty) {
@@ -137,6 +160,65 @@ class MatchCpuViewModel extends Notifier<MatchCpuState> {
     if (state.currentPlayer != state.playerPiece) {
       _triggerCpuMove();
     }
+  }
+
+  /// ヒント表示モードを変更する
+  void setHintDisplayMode(HintDisplayMode mode) {
+    state = state.copyWith(
+      hintSettings: state.hintSettings.copyWith(displayMode: mode),
+    );
+    
+    // 表示モードが「なし」以外に変更された場合だけ評価値を計算
+    if (mode != HintDisplayMode.none) {
+      _updateHintEvaluations();
+    } else {
+      // 表示モードが「なし」に変更された場合は評価値をクリア
+      state = state.copyWith(hintEvaluations: []);
+    }
+  }
+
+  /// ミニマックスの深さを変更する
+  void setMinimaxDepth(int depth) {
+    state = state.copyWith(
+      hintSettings: state.hintSettings.copyWith(minimaxDepth: depth),
+    );
+    
+    // 深さを変更した場合は評価値を再計算
+    if (state.hintSettings.displayMode != HintDisplayMode.none) {
+      _updateHintEvaluations();
+    }
+  }
+
+  /// ヒント評価値を更新する（非同期処理）
+  void _updateHintEvaluations() {
+    // ヒント表示がオフの場合は何もしない
+    if (state.hintSettings.displayMode == HintDisplayMode.none) {
+      return;
+    }
+    
+    // プレイヤーのターンのみヒントを表示
+    if (state.currentPlayer != state.playerPiece) {
+      state = state.copyWith(hintEvaluations: []);
+      return;
+    }
+    
+    // 有効な手がない場合は評価値をクリア
+    if (state.validMoves.isEmpty) {
+      state = state.copyWith(hintEvaluations: []);
+      return;
+    }
+    
+    // バックグラウンドで評価値を計算（UIをブロックしないため）
+    Future.microtask(() {
+      final evaluations = ReversiAi.calculateHintValues(
+        state.validMoves,
+        state.board,
+        state.currentPlayer,
+        depth: state.hintSettings.minimaxDepth,
+      );
+      
+      state = state.copyWith(hintEvaluations: evaluations);
+    });
   }
 
   void _triggerCpuMove() {

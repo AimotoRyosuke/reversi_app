@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:reversi_app/game/reversi_logic.dart';
+import 'package:reversi_app/services/game/reversi_logic.dart';
 
 void main() {
   group('ReversiLogic', () {

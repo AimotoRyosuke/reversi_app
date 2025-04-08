@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:reversi_app/data/app_colors.dart';
 import 'package:reversi_app/data/constants.dart';
 
 /// CPUが配置するマスを決めるロジックを持つクラス
@@ -329,11 +328,9 @@ class ReversiAi {
   /// ミニマックスアルゴリズムを使用した先読み
   /// 数手先までシミュレーションして最適な手を選ぶ
   static List<int> selectMoveVeryHard(
-    List<List<int>> validMoves,
-    List<List<int>> board,
-    int player, {
-    int depth = 4,
-  }) {
+      List<List<int>> validMoves, List<List<int>> board, int player,
+      {int depth = 4} // 先読みの深さをパラメータ化
+      ) {
     if (validMoves.isEmpty) return [];
 
     // 角があれば即取る（基本戦略）
@@ -680,14 +677,13 @@ class ReversiAi {
   /// 手の評価値を計算
   /// 返り値は各手の評価値のリスト
   static List<HintEvaluation> calculateHintValues(
-    List<List<int>> validMoves,
-    List<List<int>> board,
-    int player, {
-    int depth = 4,
-  }) {
+      List<List<int>> validMoves, List<List<int>> board, int player,
+      {int depth = 4}) {
     if (validMoves.isEmpty) return [];
 
     final evaluations = <HintEvaluation>[];
+    var maxScore = double.negativeInfinity;
+    var minScore = double.infinity;
 
     // 各手の評価値を計算
     for (final move in validMoves) {
@@ -701,40 +697,60 @@ class ReversiAi {
         false,
       );
 
-      // 絶対評価に基づいてスコアを正規化
-      final normalizedScore = normalizeScore(score);
+      evaluations.add(HintEvaluation(move: move, score: score));
 
-      evaluations.add(HintEvaluation(
-        move: move,
-        score: score,
-        normalizedScore: normalizedScore,
-      ));
+      // 最大・最小の評価値を更新
+      maxScore = max(maxScore, score);
+      minScore = min(minScore, score);
+    }
+
+    // 評価値を0〜100の21段階評価に正規化
+    for (final evaluation in evaluations) {
+      evaluation.normalizedScore = normalizeScore(
+        evaluation.score,
+        maxScore,
+        minScore,
+      );
     }
 
     return evaluations;
   }
 
-  /// 評価値を0〜100の範囲（5刻み）の絶対評価に変換
-  static int normalizeScore(double score) {
-    // スコアの理論的な最大値と最小値を決定
-    const theoreticalMinScore = -500; // 最悪ケースの評価値
-    const theoreticalMaxScore = 500; // 最良ケースの評価値
+  /// 評価値を0〜100の範囲（5刻み）に変換
+  static int normalizeScore(double score, double maxScore, double minScore) {
+    if (maxScore == minScore) return 100;
 
-    // スコアを0〜100の範囲に正規化
-    final normalizedValue = ((score - theoreticalMinScore) /
-            (theoreticalMaxScore - theoreticalMinScore)) *
-        100;
-
-    // 0〜100の範囲に制限
-    final clampedValue = normalizedValue.clamp(0.0, 100.0);
-
-    // 5刻みの値に丸める
-    return (clampedValue / 5).round() * 5;
+    var normalizedScore = ((score - minScore) / (maxScore - minScore)) * 100;
+    return (normalizedScore / 5).round() * 5;
   }
 
   /// 評価値に対応する色を取得
   static Color getScoreColor(int normalizedScore) {
-    return AppColors.hintScoreColors[normalizedScore] ?? Colors.black;
+    final Map<int, Color> scoreColors = {
+      100: const Color(0xFF0000FF), // 濃い青
+      95: const Color(0xFF0033FF), // 青
+      90: const Color(0xFF3333FF), // 青紫
+      85: const Color(0xFF4169E1), // 藍色
+      80: const Color(0xFF00BFFF), // 水色
+      75: const Color(0xFF87CEEB), // スカイブルー
+      70: const Color(0xFFADD8E6), // 淡い青
+      65: const Color(0xFF48D1CC), // 青緑
+      60: const Color(0xFF40E0D0), // ターコイズ
+      55: const Color(0xFF9370DB), // 紫
+      50: const Color(0xFFE6E6FA), // ラベンダー
+      45: const Color(0xFFD8BFD8), // 薄紫
+      40: const Color(0xFFFFC0CB), // ピンク
+      35: const Color(0xFFFFFF00), // 黄色
+      30: const Color(0xFFFFA500), // オレンジ
+      25: const Color(0xFFFF8C00), // 濃いオレンジ
+      20: const Color(0xFFFF4500), // 赤橙
+      15: const Color(0xFFFF6347), // 薄い赤
+      10: const Color(0xFFFF0000), // 赤
+      5: const Color(0xFFB22222), // 暗い赤
+      0: const Color(0xFF8B0000), // 濃い赤
+    };
+
+    return scoreColors[normalizedScore] ?? Colors.black;
   }
 }
 

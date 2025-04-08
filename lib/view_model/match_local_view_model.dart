@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:reversi_app/game/reversi_logic.dart';
+import 'package:reversi_app/services/game/reversi_logic.dart';
 
 part 'match_local_view_model.freezed.dart';
 

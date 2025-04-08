@@ -1,4 +1,4 @@
-import 'package:reversi_app/constants.dart';
+import 'package:reversi_app/data/constants.dart';
 
 /// リバーシのコアロジック
 class ReversiLogic {

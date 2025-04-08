@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:reversi_app/models/hint_settings.dart';
 import 'package:reversi_app/ui/components/game_board.dart';
 import 'package:reversi_app/ui/components/score.dart';
 import 'package:reversi_app/ui/components/skip_message.dart';
@@ -18,9 +19,11 @@ class _GameSettings {
   _GameSettings({
     required this.playerChoice,
     required this.difficultyLevel,
+    required this.hintSettings,
   });
   final PlayerChoice playerChoice;
   final CpuDifficulty difficultyLevel;
+  final HintSettings hintSettings;
 }
 
 class _MatchCpuScreenState extends ConsumerState<MatchCpuScreen> {
@@ -36,6 +39,7 @@ class _MatchCpuScreenState extends ConsumerState<MatchCpuScreen> {
   Future<void> _showGameSettingsDialog() async {
     final defaultPiece = ref.read(matchCpuProvider).playerChoice;
     final defaultDifficulty = ref.read(matchCpuProvider).difficulty;
+    final defaultHintSettings = ref.read(matchCpuProvider).hintSettings;
     final settings = await showDialog<_GameSettings>(
       context: context,
       barrierDismissible: false,
@@ -43,6 +47,7 @@ class _MatchCpuScreenState extends ConsumerState<MatchCpuScreen> {
         return _GameSettingsDialog(
           defaultPiece: defaultPiece,
           defaultDifficulty: defaultDifficulty,
+          defaultHintSettings: defaultHintSettings,
         );
       },
     );
@@ -51,6 +56,7 @@ class _MatchCpuScreenState extends ConsumerState<MatchCpuScreen> {
       ref.read(matchCpuProvider.notifier).startGameWithChoice(
             settings.playerChoice,
             settings.difficultyLevel,
+            settings.hintSettings,
           );
     }
   }
@@ -127,24 +133,31 @@ class _GameSettingsDialog extends StatefulWidget {
   const _GameSettingsDialog({
     required this.defaultPiece,
     required this.defaultDifficulty,
+    required this.defaultHintSettings,
   });
-  @override
-  State<_GameSettingsDialog> createState() => _GameSettingsDialogState();
   final PlayerChoice defaultPiece;
   final CpuDifficulty defaultDifficulty;
+  final HintSettings defaultHintSettings;
+
+  @override
+  State<_GameSettingsDialog> createState() => _GameSettingsDialogState();
 }
 
 class _GameSettingsDialogState extends State<_GameSettingsDialog> {
   late PlayerChoice _selectedPiece;
   late CpuDifficulty _selectedDifficulty;
+  late HintDisplayMode _selectedHintMode;
+  late int _selectedDepth;
 
   @override
   void initState() {
+    super.initState();
     setState(() {
       _selectedPiece = widget.defaultPiece;
       _selectedDifficulty = widget.defaultDifficulty;
+      _selectedHintMode = widget.defaultHintSettings.displayMode;
+      _selectedDepth = widget.defaultHintSettings.minimaxDepth;
     });
-    super.initState();
   }
 
   @override
@@ -154,91 +167,121 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Center(
-              child: Text(
-                'ゲーム設定',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+            const Text(
+              'ゲーム設定',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
+              textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
             const Text(
-              '駒の選択',
+              '持ち駒を選択',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildPieceOption(PlayerChoice.black, '黒'),
-                _buildPieceOption(PlayerChoice.white, '白'),
+                _buildPieceOption(PlayerChoice.black, '黒（先手）'),
+                const SizedBox(width: 8),
+                _buildPieceOption(PlayerChoice.white, '白（後手）'),
+                const SizedBox(width: 8),
                 _buildPieceOption(PlayerChoice.random, 'ランダム'),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             const Text(
-              '難易度',
+              'CPUの強さ',
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 _buildDifficultyOption(CpuDifficulty.easy, '初級'),
+                const SizedBox(width: 8),
                 _buildDifficultyOption(CpuDifficulty.medium, '中級'),
+                const SizedBox(width: 8),
                 _buildDifficultyOption(CpuDifficulty.hard, '上級'),
+                const SizedBox(width: 8),
                 _buildDifficultyOption(CpuDifficulty.veryHard, '超級'),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
+            const Text(
+              'ヒント表示',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    context.pop();
-                  },
-                  child: const Text(
-                    'キャンセル',
-                    style: TextStyle(fontSize: 16),
-                  ),
+                _buildHintOption(HintDisplayMode.none, '非表示'),
+                const SizedBox(width: 8),
+                _buildHintOption(HintDisplayMode.colorOnly, '色のみ'),
+                const SizedBox(width: 8),
+                _buildHintOption(HintDisplayMode.number, '数値'),
+              ],
+            ),
+            if (_selectedHintMode != HintDisplayMode.none) ...[
+              const SizedBox(height: 16),
+              const Text(
+                '先読みの深さ',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(width: 12),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(
-                      _GameSettings(
-                        playerChoice: _selectedPiece,
-                        difficultyLevel: _selectedDifficulty,
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Text('浅い'),
+                  Expanded(
+                    child: Slider(
+                      value: _selectedDepth.toDouble(),
+                      min: 2,
+                      max: 6,
+                      divisions: 4,
+                      label: _selectedDepth.toString(),
+                      onChanged: (value) {
+                        setState(() {
+                          _selectedDepth = value.toInt();
+                        });
+                      },
                     ),
                   ),
-                  child: const Text(
-                    'スタート',
-                    style: TextStyle(fontSize: 16),
+                  const Text('深い'),
+                ],
+              ),
+            ],
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop(
+                  _GameSettings(
+                    playerChoice: _selectedPiece,
+                    difficultyLevel: _selectedDifficulty,
+                    hintSettings: HintSettings(
+                      displayMode: _selectedHintMode,
+                      minimaxDepth: _selectedDepth,
+                    ),
                   ),
-                ),
-              ],
+                );
+              },
+              child: const Text('開始'),
             ),
           ],
         ),
@@ -250,35 +293,16 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              _selectedPiece = choice;
-            });
+        child: ChoiceChip(
+          label: Text(label),
+          selected: _selectedPiece == choice,
+          onSelected: (selected) {
+            if (selected) {
+              setState(() {
+                _selectedPiece = choice;
+              });
+            }
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: _selectedPiece == choice ? Colors.blue : Colors.grey,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(8),
-              color: _selectedPiece == choice
-                  ? Colors.blue.withValues(alpha: 0.1)
-                  : null,
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: _selectedPiece == choice
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -287,38 +311,36 @@ class _GameSettingsDialogState extends State<_GameSettingsDialog> {
   Widget _buildDifficultyOption(CpuDifficulty difficulty, String label) {
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 4),
-        child: InkWell(
-          onTap: () {
-            setState(() {
-              _selectedDifficulty = difficulty;
-            });
+        padding: const EdgeInsets.symmetric(horizontal: 2),
+        child: ChoiceChip(
+          label: Text(label),
+          selected: _selectedDifficulty == difficulty,
+          onSelected: (selected) {
+            if (selected) {
+              setState(() {
+                _selectedDifficulty = difficulty;
+              });
+            }
           },
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: _selectedDifficulty == difficulty
-                    ? Colors.blue
-                    : Colors.grey,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(8),
-              color: _selectedDifficulty == difficulty
-                  ? Colors.blue.withValues(alpha: 0.1)
-                  : null,
-            ),
-            child: Center(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontWeight: _selectedDifficulty == difficulty
-                      ? FontWeight.bold
-                      : FontWeight.normal,
-                ),
-              ),
-            ),
-          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHintOption(HintDisplayMode mode, String label) {
+    return Expanded(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 4),
+        child: ChoiceChip(
+          label: Text(label),
+          selected: _selectedHintMode == mode,
+          onSelected: (selected) {
+            if (selected) {
+              setState(() {
+                _selectedHintMode = mode;
+              });
+            }
+          },
         ),
       ),
     );
@@ -378,6 +400,8 @@ class _GameContent extends ConsumerWidget {
                 validMoves: cpuState.validMoves,
                 player: cpuState.currentPlayer,
                 onCellTap: cpuViewModel.applyMove,
+                hintSettings: cpuState.hintSettings,
+                hintEvaluations: cpuState.hintEvaluations,
               ),
             ),
             if (cpuState.showSkipMessage)

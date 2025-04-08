@@ -25,6 +25,9 @@ mixin _$MatchCpuState {
       throw _privateConstructorUsedError; // 1 for black, -1 for white
   PlayerChoice get playerChoice => throw _privateConstructorUsedError;
   CpuDifficulty get difficulty => throw _privateConstructorUsedError;
+  HintSettings get hintSettings => throw _privateConstructorUsedError;
+  List<HintEvaluation> get hintEvaluations =>
+      throw _privateConstructorUsedError;
 
   /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
@@ -47,7 +50,11 @@ abstract class $MatchCpuStateCopyWith<$Res> {
       bool showSkipMessage,
       int playerPiece,
       PlayerChoice playerChoice,
-      CpuDifficulty difficulty});
+      CpuDifficulty difficulty,
+      HintSettings hintSettings,
+      List<HintEvaluation> hintEvaluations});
+
+  $HintSettingsCopyWith<$Res> get hintSettings;
 }
 
 /// @nodoc
@@ -73,6 +80,8 @@ class _$MatchCpuStateCopyWithImpl<$Res, $Val extends MatchCpuState>
     Object? playerPiece = null,
     Object? playerChoice = null,
     Object? difficulty = null,
+    Object? hintSettings = null,
+    Object? hintEvaluations = null,
   }) {
     return _then(_value.copyWith(
       board: null == board
@@ -107,7 +116,25 @@ class _$MatchCpuStateCopyWithImpl<$Res, $Val extends MatchCpuState>
           ? _value.difficulty
           : difficulty // ignore: cast_nullable_to_non_nullable
               as CpuDifficulty,
+      hintSettings: null == hintSettings
+          ? _value.hintSettings
+          : hintSettings // ignore: cast_nullable_to_non_nullable
+              as HintSettings,
+      hintEvaluations: null == hintEvaluations
+          ? _value.hintEvaluations
+          : hintEvaluations // ignore: cast_nullable_to_non_nullable
+              as List<HintEvaluation>,
     ) as $Val);
+  }
+
+  /// Create a copy of MatchCpuState
+  /// with the given fields replaced by the non-null parameter values.
+  @override
+  @pragma('vm:prefer-inline')
+  $HintSettingsCopyWith<$Res> get hintSettings {
+    return $HintSettingsCopyWith<$Res>(_value.hintSettings, (value) {
+      return _then(_value.copyWith(hintSettings: value) as $Val);
+    });
   }
 }
 
@@ -127,7 +154,12 @@ abstract class _$$MatchCpuStateImplCopyWith<$Res>
       bool showSkipMessage,
       int playerPiece,
       PlayerChoice playerChoice,
-      CpuDifficulty difficulty});
+      CpuDifficulty difficulty,
+      HintSettings hintSettings,
+      List<HintEvaluation> hintEvaluations});
+
+  @override
+  $HintSettingsCopyWith<$Res> get hintSettings;
 }
 
 /// @nodoc
@@ -151,6 +183,8 @@ class __$$MatchCpuStateImplCopyWithImpl<$Res>
     Object? playerPiece = null,
     Object? playerChoice = null,
     Object? difficulty = null,
+    Object? hintSettings = null,
+    Object? hintEvaluations = null,
   }) {
     return _then(_$MatchCpuStateImpl(
       board: null == board
@@ -185,6 +219,14 @@ class __$$MatchCpuStateImplCopyWithImpl<$Res>
           ? _value.difficulty
           : difficulty // ignore: cast_nullable_to_non_nullable
               as CpuDifficulty,
+      hintSettings: null == hintSettings
+          ? _value.hintSettings
+          : hintSettings // ignore: cast_nullable_to_non_nullable
+              as HintSettings,
+      hintEvaluations: null == hintEvaluations
+          ? _value._hintEvaluations
+          : hintEvaluations // ignore: cast_nullable_to_non_nullable
+              as List<HintEvaluation>,
     ));
   }
 }
@@ -200,9 +242,12 @@ class _$MatchCpuStateImpl extends _MatchCpuState {
       this.showSkipMessage = false,
       this.playerPiece = 1,
       this.playerChoice = PlayerChoice.black,
-      this.difficulty = CpuDifficulty.medium})
+      this.difficulty = CpuDifficulty.medium,
+      this.hintSettings = const HintSettings(),
+      final List<HintEvaluation> hintEvaluations = const []})
       : _board = board,
         _validMoves = validMoves,
+        _hintEvaluations = hintEvaluations,
         super._();
 
   final List<List<int>> _board;
@@ -238,10 +283,21 @@ class _$MatchCpuStateImpl extends _MatchCpuState {
   @override
   @JsonKey()
   final CpuDifficulty difficulty;
+  @override
+  @JsonKey()
+  final HintSettings hintSettings;
+  final List<HintEvaluation> _hintEvaluations;
+  @override
+  @JsonKey()
+  List<HintEvaluation> get hintEvaluations {
+    if (_hintEvaluations is EqualUnmodifiableListView) return _hintEvaluations;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_hintEvaluations);
+  }
 
   @override
   String toString() {
-    return 'MatchCpuState(board: $board, currentPlayer: $currentPlayer, winner: $winner, validMoves: $validMoves, showSkipMessage: $showSkipMessage, playerPiece: $playerPiece, playerChoice: $playerChoice, difficulty: $difficulty)';
+    return 'MatchCpuState(board: $board, currentPlayer: $currentPlayer, winner: $winner, validMoves: $validMoves, showSkipMessage: $showSkipMessage, playerPiece: $playerPiece, playerChoice: $playerChoice, difficulty: $difficulty, hintSettings: $hintSettings, hintEvaluations: $hintEvaluations)';
   }
 
   @override
@@ -262,7 +318,11 @@ class _$MatchCpuStateImpl extends _MatchCpuState {
             (identical(other.playerChoice, playerChoice) ||
                 other.playerChoice == playerChoice) &&
             (identical(other.difficulty, difficulty) ||
-                other.difficulty == difficulty));
+                other.difficulty == difficulty) &&
+            (identical(other.hintSettings, hintSettings) ||
+                other.hintSettings == hintSettings) &&
+            const DeepCollectionEquality()
+                .equals(other._hintEvaluations, _hintEvaluations));
   }
 
   @override
@@ -275,7 +335,9 @@ class _$MatchCpuStateImpl extends _MatchCpuState {
       showSkipMessage,
       playerPiece,
       playerChoice,
-      difficulty);
+      difficulty,
+      hintSettings,
+      const DeepCollectionEquality().hash(_hintEvaluations));
 
   /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
@@ -295,7 +357,9 @@ abstract class _MatchCpuState extends MatchCpuState {
       final bool showSkipMessage,
       final int playerPiece,
       final PlayerChoice playerChoice,
-      final CpuDifficulty difficulty}) = _$MatchCpuStateImpl;
+      final CpuDifficulty difficulty,
+      final HintSettings hintSettings,
+      final List<HintEvaluation> hintEvaluations}) = _$MatchCpuStateImpl;
   const _MatchCpuState._() : super._();
 
   @override
@@ -314,6 +378,10 @@ abstract class _MatchCpuState extends MatchCpuState {
   PlayerChoice get playerChoice;
   @override
   CpuDifficulty get difficulty;
+  @override
+  HintSettings get hintSettings;
+  @override
+  List<HintEvaluation> get hintEvaluations;
 
   /// Create a copy of MatchCpuState
   /// with the given fields replaced by the non-null parameter values.
